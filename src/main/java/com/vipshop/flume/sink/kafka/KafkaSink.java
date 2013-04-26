@@ -18,16 +18,16 @@ import com.vipshop.flume.KafkaUtil;
 public class KafkaSink extends AbstractSink implements Configurable{
 	private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
 	private String topic;
-	private Producer<String, byte[]> producer;
+	private Producer<Integer, String> producer;
 	
 	public Status process() throws EventDeliveryException {
 		log.debug("proccessing...");
-		Status status = Status.READY;
+//		Status status = Status.READY;
 		Channel channel = getChannel();
 		Transaction tx = channel.getTransaction();
 		tx.begin();
 		Event e = channel.take();
-		producer.send(new ProducerData<String, byte[]>(this.topic, e.getBody()));
+		producer.send(new ProducerData<Integer, String>(this.topic, e.getBody().toString()));
 		return null;
 	}
 
