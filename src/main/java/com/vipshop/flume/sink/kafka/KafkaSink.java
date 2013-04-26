@@ -22,16 +22,30 @@ public class KafkaSink extends AbstractSink implements Configurable{
 	
 	public Status process() throws EventDeliveryException {
 		log.debug("proccessing...");
-//		Status status = Status.READY;
+		Status status = Status.READY;
 		Channel channel = getChannel();
 		Transaction tx = channel.getTransaction();
-		tx.begin();
-		Event e = channel.take();
-//		producer.send(new ProducerData<String, String>(this.topic, e.getBody().toString()));
-		producer.send(new ProducerData<String, String>("testtopic", "testline"));
-		tx.commit();
-		tx.close();
-		return null;
+		try {
+			tx.begin();
+			Event e = channel.take();
+			if(e==null) {
+				tx.rollback();
+				return Status.BACKOFF;
+			}
+			try {
+				producer.send(new ProducerData<String, String>(this.topic, e.getBody().toString()));
+				tx.commit();
+			} catch(Exception e) {
+				log.debug("------------------------------------", e);
+				throw e;
+			}
+			return Status.READY;
+		} catch(Exception e) {
+			tx.rollback();
+			return Status.BACKOFF;
+		} finally {
+			tx.close();
+		}
 	}
 
 	public void configure(Context context) {
