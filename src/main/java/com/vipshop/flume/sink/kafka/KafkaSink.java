@@ -29,6 +29,7 @@ public class KafkaSink extends AbstractSink implements Configurable{
 		Event e = channel.take();
 		producer.send(new ProducerData<Integer, String>(this.topic, e.getBody().toString()));
 		tx.commit();
+		tx.close();
 		return null;
 	}
 
