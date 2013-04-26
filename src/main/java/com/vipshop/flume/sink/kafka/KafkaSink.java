@@ -18,8 +18,7 @@ import com.vipshop.flume.KafkaUtil;
 public class KafkaSink extends AbstractSink implements Configurable{
 	private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
 	private String topic;
-	private Integer batchSize;
-	private Producer producer;
+	private Producer<String, byte[]> producer;
 	
 	public Status process() throws EventDeliveryException {
 		log.debug("proccessing...");
@@ -28,13 +27,12 @@ public class KafkaSink extends AbstractSink implements Configurable{
 		Transaction tx = channel.getTransaction();
 		tx.begin();
 		Event e = channel.take();
-		producer.send(new ProducerData<String, String>(this.topic, e.getBody().toString()));
+		producer.send(new ProducerData<String, byte[]>(this.topic, e.getBody()));
 		return null;
 	}
 
 	public void configure(Context context) {
 		this.topic = KafkaUtil.getTopic(context);
-		this.batchSize = Integer.parseInt(KafkaUtil.getBatchSize(context));
 		this.producer = KafkaUtil.getProducer(context);
 		log.info("Init producer done");
 	}

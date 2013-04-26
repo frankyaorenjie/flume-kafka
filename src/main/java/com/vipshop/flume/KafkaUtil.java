@@ -25,11 +25,11 @@ public class KafkaUtil {
 	public static Producer getProducer(Context context) {
 		kafka.javaapi.producer.Producer<Integer, String> producer;
 		Properties props = new Properties();
-		props.put("zk.connect", getZkConnect(context));
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
+		props.put("zk.connect", getZkConnect(context));
 		props.put("producer.type", "async");
 		props.put("batch.size", getBatchSize(context));
-		producer = new Producer<Integer, String>(new ProducerConfig(props));
+		producer = new Producer<String, byte[]>(new ProducerConfig(props));
 		return producer;
 	}
 }
