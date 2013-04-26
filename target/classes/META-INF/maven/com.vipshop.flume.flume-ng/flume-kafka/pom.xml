@@ -29,7 +29,7 @@
 	<dependency>
  		<groupId>com.linkedin.kafka</groupId>
   		<artifactId>kafka</artifactId>
-  		<version>0.7.0</version>
+  		<version>0.7.2</version>
 	</dependency>
 	<dependency>
   		<groupId>com.vipshop.scala</groupId>
