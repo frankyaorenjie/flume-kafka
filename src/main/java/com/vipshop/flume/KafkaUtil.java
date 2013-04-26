@@ -27,7 +27,7 @@ public class KafkaUtil {
 		Properties props = new Properties();
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
 		props.put("zk.connect", getZkConnect(context));
-		props.put("producer.type", "async");
+		props.put("producer.type", "sync");
 		props.put("batch.size", getBatchSize(context));
 		producer = new Producer<String, String>(new ProducerConfig(props));
 		return producer;
