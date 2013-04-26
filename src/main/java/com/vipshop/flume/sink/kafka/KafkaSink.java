@@ -36,12 +36,11 @@ public class KafkaSink extends AbstractSink implements Configurable{
 				log.info("----------------------send");
 				producer.send(new ProducerData<String, String>(this.topic, e.getBody().toString()));
 				tx.commit();
-				return Status.READY；
+				return Status.READY;
 			} catch(Exception ex) {
 				log.info("------------------------------------", ex);
 				throw ex;
 			}
-			return Status.READY;
 		} catch(Exception e) {
 			tx.rollback();
 			log.info("---------------------------------", e);
