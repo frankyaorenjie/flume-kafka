@@ -18,7 +18,7 @@ import com.vipshop.flume.KafkaUtil;
 public class KafkaSink extends AbstractSink implements Configurable{
 	private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
 	private String topic;
-	private Producer<Integer, String> producer;
+	private Producer<String, String> producer;
 	
 	public Status process() throws EventDeliveryException {
 		log.debug("proccessing...");
@@ -27,7 +27,7 @@ public class KafkaSink extends AbstractSink implements Configurable{
 		Transaction tx = channel.getTransaction();
 		tx.begin();
 		Event e = channel.take();
-		producer.send(new ProducerData<Integer, String>(this.topic, e.getBody().toString()));
+		producer.send(new ProducerData<String, String>(this.topic, e.getBody().toString()));
 		tx.commit();
 		tx.close();
 		return null;
