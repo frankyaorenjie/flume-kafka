@@ -23,7 +23,7 @@ public class KafkaUtil {
 		return context.getString(KafkaConstants.CONFIG_BATCH_SIZE, "1");
 	}
 	public static Producer getProducer(Context context) {
-		kafka.javaapi.producer.Producer<Integer, String> producer;
+		Producer<String, byte[]> producer;
 		Properties props = new Properties();
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
 		props.put("zk.connect", getZkConnect(context));
