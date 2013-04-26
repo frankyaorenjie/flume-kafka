@@ -30,6 +30,7 @@ public class KafkaSink extends AbstractSink implements Configurable{
 			Event e = channel.take();
 			if(e==null) {
 				tx.rollback();
+				log.info("------------------roll back");
 				return Status.BACKOFF;
 			}
 			try {
@@ -38,14 +39,15 @@ public class KafkaSink extends AbstractSink implements Configurable{
 				tx.commit();
 				return Status.READY;
 			} catch(Exception ex) {
-				log.info("------------------------------------", ex);
+				log.info("------------------------------------send error", ex);
 				throw ex;
 			}
 		} catch(Exception e) {
 			tx.rollback();
-			log.info("---------------------------------", e);
+			log.info("---------------------------------big error", e);
 			return Status.BACKOFF;
 		} finally {
+			log.info("-----------------------close");
 			tx.close();
 		}
 	}
