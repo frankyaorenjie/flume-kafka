@@ -5,7 +5,8 @@ public class KafkaConstants {
 	/**
 	 * @param args
 	 */
-	public final static String CONFIG_ZK_CONNECT="zkconnect";
-	public final static String CONFIG_TOPIC="topic";
-	public final static String CONFIG_BATCH_SIZE="batchsize";
+	public final static String CONFIG_ZK_CONNECT = "zkconnect";
+	public final static String CONFIG_TOPIC = "topic";
+	public final static String CONFIG_BATCH_SIZE = "batchsize";
+	public final static String CONFIG_CONSUMER_THREAD_NUMBER = "consumerthreadnumber";
 }

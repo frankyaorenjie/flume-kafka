@@ -2,11 +2,13 @@ package com.vipshop.flume;
 
 import java.util.Properties;
 
+import kafka.consumer.Consumer;
+import kafka.consumer.ConsumerConfig;
+import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
 
 import org.apache.flume.Context;
-import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,9 @@ public class KafkaUtil {
 	public static String getBatchSize(Context context) {
 		return context.getString(KafkaConstants.CONFIG_BATCH_SIZE, "1");
 	}
+//	public static String getConsumerThreadNumber(Context context) {
+//		return context.getString(KafkaConstants.CONFIG_CONSUMER_THREAD_NUMBER, "4");
+//	}
 	public static Producer<String, String> getProducer(Context context) {
 		Producer<String, String> producer;
 		Properties props = new Properties();
@@ -34,8 +39,42 @@ public class KafkaUtil {
 		props.put("zk.connect", getZkConnect(context));
 		props.put("producer.type", "async");
 		props.put("batch.size", getBatchSize(context));
+		
 		producer = new Producer<String, String>(new ProducerConfig(props));
-		log.info("-----------return producer");
+		log.debug("-----------return producer");
 		return producer;
 	}
+	public static ConsumerConnector getConsumer(Context context) {
+		Properties props = new Properties();
+		props.put("zk.connect", getZkConnect(context));
+		props.put("groupid", "groupid1");
+		ConsumerConfig consumerConfig = new ConsumerConfig(props);
+		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig);
+		return consumer;
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
