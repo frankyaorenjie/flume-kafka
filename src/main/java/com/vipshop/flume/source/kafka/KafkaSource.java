@@ -1,5 +1,6 @@
 package com.vipshop.flume.source.kafka;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +47,11 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 				log.debug("-----------------has next");
 				Message message = it.next().message();
 				Event event = new SimpleEvent();
-				event.setBody(message.toString().getBytes());
-				log.debug(message.toString());
+				ByteBuffer buffer = message.payload();
+				byte [] bytes = new byte[buffer.remaining()];
+				buffer.get(bytes);
+				event.setBody(bytes);
+				log.debug(new String(bytes));
 				eventList.add(event);
 				log.debug("----------------event list add done");
 			}
