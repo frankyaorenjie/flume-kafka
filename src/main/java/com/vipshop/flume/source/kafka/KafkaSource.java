@@ -47,6 +47,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 				Message message = it.next().message();
 				Event event = new SimpleEvent();
 				event.setBody(message.toString().getBytes());
+				log.debug(message.toString());
 				eventList.add(event);
 				log.debug("----------------event list add done");
 			}
