@@ -21,17 +21,17 @@ public class KafkaUtil {
 	 * @param args
 	 */
 	public static String getZkConnect(Context context) {
-		return context.getString(KafkaConstants.CONFIG_ZK_CONNECT, "");
+		return context.getString(KafkaConstants.CONFIG_ZK_CONNECT);
 	}
 	public static String getTopic(Context context) {
-		return context.getString(KafkaConstants.CONFIG_TOPIC, "");
+		return context.getString(KafkaConstants.CONFIG_TOPIC);
 	}
 	public static String getBatchSize(Context context) {
-		return context.getString(KafkaConstants.CONFIG_BATCH_SIZE, "1");
+		return context.getString(KafkaConstants.CONFIG_BATCH_SIZE, "200");
 	}
-//	public static String getConsumerThreadNumber(Context context) {
-//		return context.getString(KafkaConstants.CONFIG_CONSUMER_THREAD_NUMBER, "4");
-//	}
+	public static String getGroup(Context context) {
+		return context.getString(KafkaConstants.CONFIG_GROUP);
+	}
 	public static Producer<String, String> getProducer(Context context) {
 		Producer<String, String> producer;
 		Properties props = new Properties();
@@ -47,7 +47,7 @@ public class KafkaUtil {
 	public static ConsumerConnector getConsumer(Context context) {
 		Properties props = new Properties();
 		props.put("zk.connect", getZkConnect(context));
-		props.put("groupid", "groupid1");
+		props.put("groupid", getGroup(context));
 		ConsumerConfig consumerConfig = new ConsumerConfig(props);
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig);
 		return consumer;

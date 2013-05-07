@@ -43,16 +43,16 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		ArrayList<Event> eventList = new ArrayList<Event>();
 		for(int i = 0; i < batchSize; i++){
 			if(it.hasNext()) {
-				log.info("-----------------has next");
+				log.debug("-----------------has next");
 				Message message = it.next().message();
 				Event event = new SimpleEvent();
 				event.setBody(message.toString().getBytes());
 				eventList.add(event);
-				log.info("----------------event list add done");
+				log.debug("----------------event list add done");
 			}
 		}
 		getChannelProcessor().processEventBatch(eventList);
-		log.info("------------------process event batch");
+		log.debug("------------------process event batch");
 		return Status.READY;
 	}
 
@@ -66,13 +66,13 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		Map<String, List<KafkaStream<Message>>> consumerMap = consumer.createMessageStreams(topicCountMap);
 	    KafkaStream<Message> stream =  consumerMap.get(topic).get(0);
 	    it = stream.iterator();
-	    log.info("-------------init it done");
+	    log.debug("-------------init it done");
 	}
 
 	@Override
 	public synchronized void stop() {
 		// TODO Auto-generated method stub
-		log.info("-------------shutdown");
+		log.debug("-------------shutdown");
 		consumer.shutdown();
 		super.stop();
 	}
