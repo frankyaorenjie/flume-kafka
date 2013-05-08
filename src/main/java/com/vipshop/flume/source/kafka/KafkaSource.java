@@ -48,6 +48,8 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 				Message message = it.next().message();
 				Event event = new SimpleEvent();
 				ByteBuffer buffer = message.payload();
+				Map<String, String> headers = new HashMap<String, String>();
+				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
 				byte [] bytes = new byte[buffer.remaining()];
 				buffer.get(bytes);
 				event.setBody(bytes);
