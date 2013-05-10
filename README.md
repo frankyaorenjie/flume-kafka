@@ -1,7 +1,7 @@
 Flume-ng Kafka
 ===========
 
-This project is used for [flume-ng](https://github.com/apache/flume) to communicate with kafka.
+This project is used for [flume-ng](https://github.com/apache/flume) to communicate with [kafka 0.7,2](http://kafka.apache.org/07/quickstart.html).
 
 Configuration of Kafka Sink
 ----------
