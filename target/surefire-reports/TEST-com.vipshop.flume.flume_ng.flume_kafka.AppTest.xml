@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.025" errors="0" skipped="0" tests="1" name="com.vipshop.flume.flume_ng.flume_kafka.AppTest">
+<testsuite failures="0" time="0.037" errors="0" skipped="0" tests="1" name="com.vipshop.flume.flume_ng.flume_kafka.AppTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/local/jdk1.6.0_38/jre/lib/amd64"/>
@@ -24,7 +24,7 @@
 "/>
     <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="os.name" value="Linux"/>
-    <property name="classworlds.conf" value="/usr/local/apache-maven-3.0.4/bin/m2.conf"/>
+    <property name="classworlds.conf" value="/usr/local/apache-maven-3.0.5/bin/m2.conf"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
     <property name="java.library.path" value="/usr/local/jdk1.6.0_38/jre/lib/amd64/server:/usr/local/jdk1.6.0_38/jre/lib/amd64:/usr/local/jdk1.6.0_38/jre/../lib/amd64:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
@@ -37,11 +37,11 @@
     <property name="file.encoding" value="UTF-8"/>
     <property name="java.specification.version" value="1.6"/>
     <property name="user.name" value="frankyao"/>
-    <property name="java.class.path" value="/usr/local/apache-maven-3.0.4/boot/plexus-classworlds-2.4.jar"/>
+    <property name="java.class.path" value="/usr/local/apache-maven-3.0.5/boot/plexus-classworlds-2.4.jar"/>
     <property name="java.vm.specification.version" value="1.0"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/usr/local/jdk1.6.0_38/jre"/>
-    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher package"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher clean package"/>
     <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
     <property name="user.language" value="en"/>
     <property name="java.vm.info" value="mixed mode"/>
@@ -50,7 +50,7 @@
     <property name="securerandom.source" value="file:/dev/./urandom"/>
     <property name="sun.boot.class.path" value="/usr/local/jdk1.6.0_38/jre/lib/resources.jar:/usr/local/jdk1.6.0_38/jre/lib/rt.jar:/usr/local/jdk1.6.0_38/jre/lib/sunrsasign.jar:/usr/local/jdk1.6.0_38/jre/lib/jsse.jar:/usr/local/jdk1.6.0_38/jre/lib/jce.jar:/usr/local/jdk1.6.0_38/jre/lib/charsets.jar:/usr/local/jdk1.6.0_38/jre/lib/modules/jdk.boot.jar:/usr/local/jdk1.6.0_38/jre/classes"/>
     <property name="java.vendor" value="Sun Microsystems Inc."/>
-    <property name="maven.home" value="/usr/local/apache-maven-3.0.4"/>
+    <property name="maven.home" value="/usr/local/apache-maven-3.0.5"/>
     <property name="file.separator" value="/"/>
     <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -58,5 +58,5 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.005" classname="com.vipshop.flume.flume_ng.flume_kafka.AppTest" name="testApp"/>
+  <testcase time="0.001" classname="com.vipshop.flume.flume_ng.flume_kafka.AppTest" name="testApp"/>
 </testsuite>
