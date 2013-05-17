@@ -41,31 +41,31 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 
 	public Status process() throws EventDeliveryException {
 		// TODO Auto-generated method stub
-		ArrayList<Event> eventList = new ArrayList<Event>();
-		Message message;
-		Event event;
-		ByteBuffer buffer;
-		Map<String, String> headers;
-		byte [] bytes;
-		for(int i = 0; i < batchSize; i++){
-			if(it.hasNext()) {
-				log.debug("-----------------has next");
-				message = it.next().message();
-				event = new SimpleEvent();
-				buffer = message.payload();
-				headers = new HashMap<String, String>();
-				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
-				bytes = new byte[buffer.remaining()];
-				buffer.get(bytes);
-				event.setBody(bytes);
-				event.setHeaders(headers);
-				log.debug(new String(bytes));
-				eventList.add(event);
-				log.debug("----------------event list add done");
-			}
-		}
-		getChannelProcessor().processEventBatch(eventList);
-		log.info("------------------process event batch");
+//		ArrayList<Event> eventList = new ArrayList<Event>();
+//		Message message;
+//		Event event;
+//		ByteBuffer buffer;
+//		Map<String, String> headers;
+//		byte [] bytes;
+//		for(int i = 0; i < batchSize; i++){
+//			if(it.hasNext()) {
+//				log.debug("-----------------has next");
+//				message = it.next().message();
+//				event = new SimpleEvent();
+//				buffer = message.payload();
+//				headers = new HashMap<String, String>();
+//				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
+//				bytes = new byte[buffer.remaining()];
+//				buffer.get(bytes);
+//				event.setBody(bytes);
+//				event.setHeaders(headers);
+//				log.debug(new String(bytes));
+//				eventList.add(event);
+//				log.debug("----------------event list add done");
+//			}
+//		}
+//		getChannelProcessor().processEventBatch(eventList);
+//		log.info("------------------process event batch");
 		return Status.READY;
 	}
 
