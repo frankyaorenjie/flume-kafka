@@ -42,15 +42,20 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	public Status process() throws EventDeliveryException {
 		// TODO Auto-generated method stub
 		ArrayList<Event> eventList = new ArrayList<Event>();
+		Message message;
+		Event event;
+		ByteBuffer buffer;
+		Map<String, String> headers;
+		byte [] bytes;
 		for(int i = 0; i < batchSize; i++){
 			if(it.hasNext()) {
 				log.debug("-----------------has next");
-				Message message = it.next().message();
-				Event event = new SimpleEvent();
-				ByteBuffer buffer = message.payload();
-				Map<String, String> headers = new HashMap<String, String>();
+				message = it.next().message();
+				event = new SimpleEvent();
+				buffer = message.payload();
+				headers = new HashMap<String, String>();
 				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
-				byte [] bytes = new byte[buffer.remaining()];
+				bytes = new byte[buffer.remaining()];
 				buffer.get(bytes);
 				event.setBody(bytes);
 				event.setHeaders(headers);
