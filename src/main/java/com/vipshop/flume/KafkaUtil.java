@@ -49,7 +49,7 @@ public class KafkaUtil {
 		props.put("zk.connect", getZkConnect(context));
 		props.put("groupid", getGroup(context));
 		props.put("autooffset", "largest");
-//		props.put("socket.buffersize", "");
+		props.put("socket.buffersize", "102400000");
 		ConsumerConfig consumerConfig = new ConsumerConfig(props);
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig);
 		return consumer;
