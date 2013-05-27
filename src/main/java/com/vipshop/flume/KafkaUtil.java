@@ -45,7 +45,7 @@ public class KafkaUtil {
 		Properties props = new Properties();
 		props.put("zk.connect", getZkConnect(context));
 		props.put("groupid", getGroup(context));
-		props.put("autooffset", "largest");
+		props.put("autooffset.reset", "largest");
 		props.put("socket.buffersize", "102400000");
 		ConsumerConfig consumerConfig = new ConsumerConfig(props);
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig);
