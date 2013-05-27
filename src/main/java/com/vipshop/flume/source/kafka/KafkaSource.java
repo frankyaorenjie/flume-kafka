@@ -65,7 +65,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 			}
 		}
 		getChannelProcessor().processEventBatch(eventList);
-		log.info("------------------process event batch");
+		log.debug("------------------process event batch");
 		return Status.READY;
 	}
 
@@ -85,8 +85,8 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	@Override
 	public synchronized void stop() {
 		// TODO Auto-generated method stub
-		log.debug("-------------shutdown");
 		consumer.shutdown();
+		log.debug("-----------------stop");
 		super.stop();
 	}
 
