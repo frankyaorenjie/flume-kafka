@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
 Built-By: frankyao
-Build-Jdk: 1.7.0_15
+Build-Jdk: 1.6.0_38
 Created-By: Maven Integration for Eclipse
 
