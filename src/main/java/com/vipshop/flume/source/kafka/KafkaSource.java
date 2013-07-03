@@ -1,5 +1,6 @@
 package com.vipshop.flume.source.kafka;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.apache.flume.PollableSource;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.event.SimpleEvent;
 import org.apache.flume.source.AbstractSource;
+import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +74,18 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	public void configure(Context context) {
 		// TODO Auto-generated method stub
 		this.topic = KafkaUtil.getTopic(context);
-		this.consumer = KafkaUtil.getConsumer(context);
+		try {
+			this.consumer = KafkaUtil.getConsumer(context);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeeperException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		this.batchSize = Integer.parseInt(KafkaUtil.getBatchSize(context));
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		topicCountMap.put(topic, new Integer(1));

@@ -1,5 +1,10 @@
 package com.vipshop.flume;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 import kafka.consumer.Consumer;
@@ -9,8 +14,14 @@ import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
 
 import org.apache.flume.Context;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.WatchedEvent;
+import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.vipshop.flume.source.kafka.KafkaSource;
 
 public class KafkaUtil {
 	private static final Logger log = LoggerFactory.getLogger(KafkaUtil.class);
@@ -29,6 +40,9 @@ public class KafkaUtil {
 	public static String getGroup(Context context) {
 		return context.getString(KafkaConstants.CONFIG_GROUP);
 	}
+	public static String getResetOffset(Context context) {
+		return context.getString(KafkaConstants.CONFIG_RESET_OFFSET, "no");
+	}
 	public static Producer<String, String> getProducer(Context context) {
 		Producer<String, String> producer;
 		Properties props = new Properties();
@@ -36,13 +50,13 @@ public class KafkaUtil {
 		props.put("zk.connect", getZkConnect(context));
 		props.put("producer.type", "async");
 		props.put("batch.size", getBatchSize(context));
-		props.put("zk.connectiontimeout.ms", "15000");
+		props.put("zk.sessiontimeout.ms", "15000");
 		
 		producer = new Producer<String, String>(new ProducerConfig(props));
 		log.debug("-----------return producer");
 		return producer;
 	}
-	public static ConsumerConnector getConsumer(Context context) {
+	public static ConsumerConnector getConsumer(Context context) throws IOException, KeeperException, InterruptedException {
 		Properties props = new Properties();
 		props.put("zk.connect", getZkConnect(context));
 		props.put("groupid", getGroup(context));
@@ -54,14 +68,6 @@ public class KafkaUtil {
 		return consumer;
 	}
 }
-
-
-
-
-
-
-
-
 
 
 

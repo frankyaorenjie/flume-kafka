@@ -9,4 +9,5 @@ public class KafkaConstants {
 	public final static String CONFIG_TOPIC = "topic";
 	public final static String CONFIG_BATCH_SIZE = "batchsize";
 	public final static String CONFIG_GROUP = "group";
+	public final static String CONFIG_RESET_OFFSET = "resetoffset";
 }
