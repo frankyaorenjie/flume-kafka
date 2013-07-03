@@ -43,6 +43,9 @@ public class KafkaUtil {
 	public static String getResetOffset(Context context) {
 		return context.getString(KafkaConstants.CONFIG_RESET_OFFSET, "no");
 	}
+	public static String getZKTimeout(Context context) {
+		return context.getString(KafkaConstants.CONFIG_ZK_TIMEOUT, "15000");
+	}
 	public static Producer<String, String> getProducer(Context context) {
 		Producer<String, String> producer;
 		Properties props = new Properties();
