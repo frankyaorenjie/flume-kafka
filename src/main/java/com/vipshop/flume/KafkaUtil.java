@@ -1,10 +1,6 @@
 package com.vipshop.flume;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
 
 import kafka.consumer.Consumer;
@@ -15,13 +11,9 @@ import kafka.producer.ProducerConfig;
 
 import org.apache.flume.Context;
 import org.apache.zookeeper.KeeperException;
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vipshop.flume.source.kafka.KafkaSource;
 
 public class KafkaUtil {
 	private static final Logger log = LoggerFactory.getLogger(KafkaUtil.class);
@@ -62,8 +54,9 @@ public class KafkaUtil {
 	public static ConsumerConnector getConsumer(Context context) throws IOException, KeeperException, InterruptedException {
 		Properties props = new Properties();
 		props.put("zk.connect", getZkConnect(context));
+		props.put("fetch.size", String.valueOf(Integer.parseInt((getBatchSize(context))) * 300 * 1024));
 		props.put("groupid", getGroup(context));
-		props.put("autocommit.enable", "false");
+//		props.put("autocommit.enable", "false");
 		props.put("autooffset.reset", "largest");
 		props.put("socket.buffersize", "102400000");
 		ConsumerConfig consumerConfig = new ConsumerConfig(props);
