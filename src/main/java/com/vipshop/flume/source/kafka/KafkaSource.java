@@ -51,7 +51,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		byte [] bytes;
 		for(int i = 0; i < batchSize; i++){
 			if(it.hasNext()) {
-				log.debug("-----------------has next");
+				log.trace("-----------------has next");
 				message = it.next().message();
 				event = new SimpleEvent();
 				buffer = message.payload();
@@ -63,11 +63,11 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 				event.setHeaders(headers);
 				log.debug(new String(bytes));
 				eventList.add(event);
-				log.debug("----------------event list add done");
+				log.trace("----------------event list add done");
 			}
 		}
 		getChannelProcessor().processEventBatch(eventList);
-		log.debug("------------------process event batch");
+		log.trace("------------------process event batch");
 		return Status.READY;
 	}
 
