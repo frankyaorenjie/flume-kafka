@@ -46,6 +46,7 @@ public class KafkaUtil {
 		props.put("producer.type", "async");
 		props.put("batch.size", getBatchSize(context));
 		props.put("zk.sessiontimeout.ms", "15000");
+		props.put("queue.size", "1000000");
 		
 		producer = new Producer<String, String>(new ProducerConfig(props));
 		log.debug("-----------return producer");
