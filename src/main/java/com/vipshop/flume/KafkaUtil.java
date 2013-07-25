@@ -56,11 +56,13 @@ public class KafkaUtil {
 		props.put("zk.connect", getZkConnect(context));
 		props.put("fetch.size", String.valueOf(Integer.parseInt((getBatchSize(context))) * 300 * 1024));
 		props.put("groupid", getGroup(context));
-//		props.put("autocommit.enable", "false");
+		props.put("autocommit.enable", "false");
+		props.put("batch.size", getBatchSize(context));
 		props.put("autooffset.reset", "largest");
 		props.put("socket.buffersize", "102400000");
 		ConsumerConfig consumerConfig = new ConsumerConfig(props);
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig);
+		log.debug("-----------return consumer");
 		return consumer;
 	}
 }

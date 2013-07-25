@@ -61,10 +61,10 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 				buffer.get(bytes);
 				event.setBody(bytes);
 				event.setHeaders(headers);
-				log.debug(new String(bytes));
+				log.trace(new String(bytes));
 				eventList.add(event);
-				log.trace("----------------event list add done");
 			}
+		log.trace("----------------event list add done");
 		}
 		getChannelProcessor().processEventBatch(eventList);
 		log.trace("------------------process event batch");
