@@ -55,6 +55,7 @@ public class KafkaUtil {
 	public static ConsumerConnector getConsumer(Context context) throws IOException, KeeperException, InterruptedException {
 		Properties props = new Properties();
 		props.put("zk.connect", getZkConnect(context));
+		props.put("zk.sessiontimeout.ms", "60000");
 		props.put("fetch.size", String.valueOf(Integer.parseInt((getBatchSize(context))) * 300 * 1024));
 		props.put("groupid", getGroup(context));
 		props.put("autocommit.enable", "false");
