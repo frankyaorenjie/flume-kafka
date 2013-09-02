@@ -42,6 +42,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	}
 
 	public Status process() throws EventDeliveryException {
+		try {
 		// TODO Auto-generated method stub
 		ArrayList<Event> eventList = new ArrayList<Event>();
 		Message message;
@@ -69,6 +70,10 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		getChannelProcessor().processEventBatch(eventList);
 		log.trace("------------------process event batch");
 		return Status.READY;
+		} catch (Exception e) {
+			log.debug("-----process exception: " + e);
+			return Status.BACKOFF;
+		}
 	}
 
 	public void configure(Context context) {

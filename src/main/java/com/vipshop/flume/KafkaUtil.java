@@ -56,13 +56,13 @@ public class KafkaUtil {
 		Properties props = new Properties();
 		props.put("zk.connect", getZkConnect(context));
 		props.put("zk.sessiontimeout.ms", "60000");
-		props.put("fetch.size", String.valueOf(Integer.parseInt((getBatchSize(context))) * 300 * 1024));
+//		props.put("fetch.size", String.valueOf(Integer.parseInt((getBatchSize(context))) * 300 * 1024));
 		props.put("groupid", getGroup(context));
 		props.put("autocommit.enable", "false");
-		props.put("queuedchunks.max", "100000");
+		props.put("queuedchunks.max", "1000");
 		props.put("batch.size", getBatchSize(context));
 		props.put("autooffset.reset", "largest");
-		props.put("socket.buffersize", "102400000");
+		props.put("socket.buffersize", "10240000");
 		props.put("socket.timeout.ms", "60000");
 		ConsumerConfig consumerConfig = new ConsumerConfig(props);
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig);
