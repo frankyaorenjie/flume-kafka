@@ -69,6 +69,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		log.trace("------------------process event batch");
 		return Status.READY;
 		} catch (Exception e) {
+			// TODO fix data loss while rollback
 			log.debug("-----process exception: " + e);
 			return Status.BACKOFF;
 		}
