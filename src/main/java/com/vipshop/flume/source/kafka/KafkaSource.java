@@ -37,13 +37,11 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	Integer batchSize;
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 
 	}
 
 	public Status process() throws EventDeliveryException {
 		try {
-		// TODO Auto-generated method stub
 		ArrayList<Event> eventList = new ArrayList<Event>();
 		Message message;
 		Event event;
@@ -77,18 +75,14 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	}
 
 	public void configure(Context context) {
-		// TODO Auto-generated method stub
 		this.topic = KafkaUtil.getTopic(context);
 		try {
 			this.consumer = KafkaUtil.getConsumer(context);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (KeeperException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		this.batchSize = Integer.parseInt(KafkaUtil.getBatchSize(context));
@@ -102,7 +96,6 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 
 	@Override
 	public synchronized void stop() {
-		// TODO Auto-generated method stub
 		consumer.shutdown();
 		log.debug("-----------------stop");
 		super.stop();
