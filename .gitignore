@@ -5,4 +5,4 @@
 **/.settings
 **/.springBean
 *.class
-*/target/classes/**
+**/target/**
