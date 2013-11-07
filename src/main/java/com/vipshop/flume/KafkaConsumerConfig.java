@@ -3,49 +3,46 @@ package com.vipshop.flume;
 import org.apache.flume.Context;
 
 public class KafkaConsumerConfig {
-	public static String getProducerType(Context context) {
-		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
-	}
-	public static String getBrokerList(Context context) {
-		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
-	}
-	public static String getZkConnect(Context context) {
-		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
-	}
-	public static String getBufferSize(Context context) {
-		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
-	}
-	public static String getConnectTimeoutMs(Context context) {
+	public static String getGroupId(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
 	public static String getSocketTimeoutMs(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getReconnectInterval(Context context) {
+	public static String getSocketBufferSize(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getReconnectTimeIntervalMs(Context context) {
+	public static String getFetchSize(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getMaxMessageSize(Context context) {
+	public static String getBackOffIncrementMs(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getCompressionCodec(Context context) {
+	public static String getQueuedChunksMax(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getCompressedTopics(Context context) {
+	public static String getAutoCommitEnable(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getZkReadNumRetries(Context context) {
+	public static String getAutoCommitIntervalMs(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getQueueTime(Context context) {
+	public static String getAutoOffsetReset(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getQueueSize(Context context) {
+	public static String getConsumerTimeoutMs(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
-	public static String getBatchSize(Context context) {
+	public static String getRebalanceRetriesMax(Context context) {
+		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
+	}
+	public static String getMirrorTopicsWhiteList(Context context) {
+		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
+	}
+	public static String getMirrorTopicsBlackList(Context context) {
+		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
+	}
+	public static String getMirrorConsumerNumThreads(Context context) {
 		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
 
