@@ -1,7 +1,0 @@
-**/build
-**/bin/
-.project
-**/.springBean
-**/target/**
-.classpath
-.settings/**
