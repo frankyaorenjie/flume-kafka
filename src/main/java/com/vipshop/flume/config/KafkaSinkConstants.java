@@ -1,6 +1,6 @@
-package com.vipshop.flume;
+package com.vipshop.flume.config;
 
-public class KafkaProducerConstants {
+public class KafkaSinkConstants {
 
 	/**
 	 * @param args
@@ -21,4 +21,5 @@ public class KafkaProducerConstants {
 	public final static String CONFIG_QUEUE_TIME = "queue.time";
 	public final static String CONFIG_QUEUE_SIZE = "queue.size";
 	public final static String CONFIG_BATCH_SIZE = "batch.size";
+	public final static String CONFIG_TOPIC = "topic";
 }

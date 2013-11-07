@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vipshop.flume.KafkaUtil;
+import com.vipshop.flume.config.KafkaSourceConfig;
 
 public class KafkaSource extends AbstractSource implements Configurable, PollableSource {
 
@@ -76,7 +77,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	}
 
 	public void configure(Context context) {
-		this.topic = KafkaUtil.getTopic(context);
+		this.topic = KafkaSourceConfig.getTopic(context);
 		try {
 			this.consumer = KafkaUtil.getConsumer(context);
 		} catch (IOException e) {
@@ -86,7 +87,6 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		this.batchSize = Integer.parseInt(KafkaUtil.getBatchSize(context));
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		topicCountMap.put(topic, new Integer(1));
 		Map<String, List<KafkaStream<Message>>> consumerMap = consumer.createMessageStreams(topicCountMap);

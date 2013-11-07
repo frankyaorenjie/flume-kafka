@@ -1,6 +1,6 @@
-package com.vipshop.flume;
+package com.vipshop.flume.config;
 
-public class KafkaConsumerConstants {
+public class KafkaSourceConstants {
 
 	/**
 	 * @param args
@@ -19,4 +19,7 @@ public class KafkaConsumerConstants {
 	public final static String CONFIG_MIRROR_TOPICS_WHITELIST = "mirror.topics.whitelist";
 	public final static String CONFIG_MIRROR_TOPICS_BLACKLIST = "mirror.topics.blacklist";
 	public final static String CONFIG_MIRROR_CONSUMER_NUMTHREADS = "mirror.consumer.numthreads";
+	public final static String CONFIG_BROKER_LIST = "broker.list";
+	public final static String CONFIG_ZK_CONNECT = "zk.connect";
+	public final static String CONFIG_TOPIC = "topic";
 }

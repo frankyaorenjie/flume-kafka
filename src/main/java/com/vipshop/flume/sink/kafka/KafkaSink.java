@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vipshop.flume.KafkaUtil;
+import com.vipshop.flume.config.KafkaSinkConfig;
 
 public class KafkaSink extends AbstractSink implements Configurable{
 	private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
@@ -52,7 +53,7 @@ public class KafkaSink extends AbstractSink implements Configurable{
 	}
 
 	public void configure(Context context) {
-		this.topic = KafkaUtil.getTopic(context);
+		this.topic = KafkaSinkConfig.getTopic(context);
 		this.producer = KafkaUtil.getProducer(context);
 		log.debug("-------Init producer done-----------");
 	}
