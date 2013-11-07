@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vipshop.flume.KafkaUtil;
-import com.vipshop.flume.config.KafkaSourceConfig;
 
 public class KafkaSource extends AbstractSource implements Configurable, PollableSource {
 
@@ -77,7 +76,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	}
 
 	public void configure(Context context) {
-		this.topic = KafkaSourceConfig.getTopic(context);
+		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
 		try {
 			this.consumer = KafkaUtil.getConsumer(context);
 		} catch (IOException e) {
