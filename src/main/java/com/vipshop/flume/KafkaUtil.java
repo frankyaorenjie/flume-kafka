@@ -21,22 +21,22 @@ public class KafkaUtil {
 	 * @param args
 	 */
 	public static String getZkConnect(Context context) {
-		return context.getString(KafkaConstants.CONFIG_ZK_CONNECT);
+		return context.getString(KafkaProducerConstants.CONFIG_ZK_CONNECT);
 	}
 	public static String getTopic(Context context) {
-		return context.getString(KafkaConstants.CONFIG_TOPIC);
+		return context.getString(KafkaProducerConstants.CONFIG_TOPIC);
 	}
 	public static String getBatchSize(Context context) {
-		return context.getString(KafkaConstants.CONFIG_BATCH_SIZE, "200");
+		return context.getString(KafkaProducerConstants.CONFIG_BATCH_SIZE, "200");
 	}
 	public static String getGroup(Context context) {
-		return context.getString(KafkaConstants.CONFIG_GROUP);
+		return context.getString(KafkaProducerConstants.CONFIG_GROUP);
 	}
 	public static String getResetOffset(Context context) {
-		return context.getString(KafkaConstants.CONFIG_RESET_OFFSET, "no");
+		return context.getString(KafkaProducerConstants.CONFIG_RESET_OFFSET, "no");
 	}
 	public static String getZKTimeout(Context context) {
-		return context.getString(KafkaConstants.CONFIG_ZK_TIMEOUT, "15000");
+		return context.getString(KafkaProducerConstants.CONFIG_ZK_TIMEOUT, "15000");
 	}
 	public static Producer<String, String> getProducer(Context context) {
 		Producer<String, String> producer;

@@ -1,6 +1,6 @@
 package com.vipshop.flume;
 
-public class KafkaConstants {
+public class KafkaProducerConstants {
 
 	/**
 	 * @param args
