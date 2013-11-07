@@ -24,13 +24,14 @@ public class KafkaUtil {
 	 * @param args
 	 */
 	public static Producer<String, String> getProducer(Context context) {
+		log.info(context.toString());
 		Producer<String, String> producer;
 		Properties props = new Properties();
 		props.put("serializer.class", "kafka.serializer.StringEncoder");
 		props.put("zk.connect", KafkaSinkConfig.getZkConnect(context));
 		props.put("producer.type", "async");
 		props.put("batch.size", KafkaSinkConfig.getBatchSize(context));
-		props.put("zk.sessiontimeout.ms", "15000");
+		
 		props.put("queue.size", "1000000");
 		
 		producer = new Producer<String, String>(new ProducerConfig(props));
@@ -38,6 +39,7 @@ public class KafkaUtil {
 		return producer;
 	}
 	public static ConsumerConnector getConsumer(Context context) throws IOException, KeeperException, InterruptedException {
+		log.info(context.toString());
 		Properties props = new Properties();
 		props.put("zk.connect", KafkaSourceConfig.getZkConnect(context));
 		props.put("zk.sessiontimeout.ms", "60000");
