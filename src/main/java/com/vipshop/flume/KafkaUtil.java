@@ -27,11 +27,9 @@ public class KafkaUtil {
 		Properties props = new Properties();
 		String contextString = context.toString();
 		for(final String kv : contextString.substring(14,contextString.length()-3).split(", ")) {
-			log.info("TODO KV:" + kv);
 			String k = kv.trim().split("=")[0];
-			log.info("K:" + k);
 			String v = kv.trim().split("=")[1];
-			log.info("V:" + v);
+			log.info("Parse Parames: " + k + "=" + v);
 			if (!k.equals("type") && !k.equals("channel")) {
 				props.put(k, v);
 			}
