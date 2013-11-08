@@ -52,7 +52,7 @@ public class KafkaSink extends AbstractSink implements Configurable{
 	}
 
 	public void configure(Context context) {
-		this.topic = KafkaUtil.getTopic(context);
+		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
 		this.producer = KafkaUtil.getProducer(context);
 		log.debug("-------Init producer done-----------");
 	}

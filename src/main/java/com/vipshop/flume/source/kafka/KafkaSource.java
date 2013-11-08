@@ -69,13 +69,14 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		log.trace("------------------process event batch");
 		return Status.READY;
 		} catch (Exception e) {
+			// TODO fix data loss while rollback
 			log.debug("-----process exception: " + e);
 			return Status.BACKOFF;
 		}
 	}
 
 	public void configure(Context context) {
-		this.topic = KafkaUtil.getTopic(context);
+		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
 		try {
 			this.consumer = KafkaUtil.getConsumer(context);
 		} catch (IOException e) {
@@ -85,7 +86,6 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		this.batchSize = Integer.parseInt(KafkaUtil.getBatchSize(context));
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		topicCountMap.put(topic, new Integer(1));
 		Map<String, List<KafkaStream<Message>>> consumerMap = consumer.createMessageStreams(topicCountMap);

@@ -20,53 +20,35 @@ public class KafkaUtil {
 	/**
 	 * @param args
 	 */
-	public static String getZkConnect(Context context) {
-		return context.getString(KafkaConstants.CONFIG_ZK_CONNECT);
+	public static String getKafkaConfigParameter(Context context, String key) {
+		return context.getString(key);
 	}
-	public static String getTopic(Context context) {
-		return context.getString(KafkaConstants.CONFIG_TOPIC);
-	}
-	public static String getBatchSize(Context context) {
-		return context.getString(KafkaConstants.CONFIG_BATCH_SIZE, "200");
-	}
-	public static String getGroup(Context context) {
-		return context.getString(KafkaConstants.CONFIG_GROUP);
-	}
-	public static String getResetOffset(Context context) {
-		return context.getString(KafkaConstants.CONFIG_RESET_OFFSET, "no");
-	}
-	public static String getZKTimeout(Context context) {
-		return context.getString(KafkaConstants.CONFIG_ZK_TIMEOUT, "15000");
+	public static Properties getKafkaConfigProperties(Context context) {
+		Properties props = new Properties();
+		String contextString = context.toString();
+		for(final String kv : contextString.substring(14,contextString.length()-3).split(", ")) {
+			log.info("TODO KV:" + kv);
+			String k = kv.trim().split("=")[0];
+			log.info("K:" + k);
+			String v = kv.trim().split("=")[1];
+			log.info("V:" + v);
+			if (!k.equals("type") && !k.equals("channel")) {
+				props.put(k, v);
+			}
+		}
+		log.info("PROPS:" + props);
+		return props;
 	}
 	public static Producer<String, String> getProducer(Context context) {
+		log.info(context.toString());
 		Producer<String, String> producer;
-		Properties props = new Properties();
-		props.put("serializer.class", "kafka.serializer.StringEncoder");
-		props.put("zk.connect", getZkConnect(context));
-		props.put("producer.type", "async");
-		props.put("batch.size", getBatchSize(context));
-		props.put("zk.sessiontimeout.ms", "15000");
-		props.put("queue.size", "1000000");
-		
-		producer = new Producer<String, String>(new ProducerConfig(props));
-		log.debug("-----------return producer");
+		producer = new Producer<String, String>(new ProducerConfig(getKafkaConfigProperties(context)));
 		return producer;
 	}
 	public static ConsumerConnector getConsumer(Context context) throws IOException, KeeperException, InterruptedException {
-		Properties props = new Properties();
-		props.put("zk.connect", getZkConnect(context));
-		props.put("zk.sessiontimeout.ms", "60000");
-//		props.put("fetch.size", String.valueOf(Integer.parseInt((getBatchSize(context))) * 300 * 1024));
-		props.put("groupid", getGroup(context));
-		props.put("autocommit.enable", "false");
-		props.put("queuedchunks.max", "1000");
-		props.put("batch.size", getBatchSize(context));
-		props.put("autooffset.reset", "largest");
-		props.put("socket.buffersize", "10240000");
-		props.put("socket.timeout.ms", "60000");
-		ConsumerConfig consumerConfig = new ConsumerConfig(props);
+		log.info(context.toString());
+		ConsumerConfig consumerConfig = new ConsumerConfig(getKafkaConfigProperties(context));
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig);
-		log.debug("-----------return consumer");
 		return consumer;
 	}
 }
