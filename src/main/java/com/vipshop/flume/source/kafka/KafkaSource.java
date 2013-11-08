@@ -34,50 +34,47 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	ConsumerConnector consumer;
 	ConsumerIterator<Message> it;
 	String topic;
-	Integer batchSize = 3;
+	Integer batchSize;
 	
 	public static void main(String[] args) {
 
 	}
 
 	public Status process() throws EventDeliveryException {
-		try {
 		ArrayList<Event> eventList = new ArrayList<Event>();
 		Message message;
 		Event event;
 		ByteBuffer buffer;
 		Map<String, String> headers;
 		byte [] bytes;
+		try {
 		for(int i = 0; i < batchSize; i++){
 			if(it.hasNext()) {
-				log.trace("-----------------has next");
 				message = it.next().message();
-				log.info("**************"+message);
 				event = new SimpleEvent();
 				buffer = message.payload();
 				headers = new HashMap<String, String>();
 				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
 				bytes = new byte[buffer.remaining()];
 				buffer.get(bytes);
+				log.debug("Message[" + i + "]" + ": " + new String(bytes));
 				event.setBody(bytes);
 				event.setHeaders(headers);
-				log.trace(new String(bytes));
 				eventList.add(event);
 			}
-		log.trace("----------------event list add done");
 		}
-		getChannelProcessor().processEventBatch(eventList);
-		log.trace("------------------process event batch");
+  		getChannelProcessor().processEventBatch(eventList);
 		return Status.READY;
 		} catch (Exception e) {
-			// TODO fix data loss while rollback
-			log.debug("-----process exception: " + e);
+			log.error("KafkaSource EXCEPTION" + e);
 			return Status.BACKOFF;
+		} finally {
 		}
 	}
 
 	public void configure(Context context) {
 		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
+		this.batchSize = Integer.parseInt(KafkaUtil.getKafkaConfigParameter(context, "batch.size"));
 		try {
 			this.consumer = KafkaUtil.getConsumer(context);
 		} catch (IOException e) {

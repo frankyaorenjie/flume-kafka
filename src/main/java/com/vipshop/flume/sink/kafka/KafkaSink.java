@@ -21,7 +21,6 @@ public class KafkaSink extends AbstractSink implements Configurable{
 	private Producer<String, String> producer;
 	
 	public Status process() throws EventDeliveryException {
-		log.trace("------------------------------------proccessing...");
 		Channel channel = getChannel();
 		Transaction tx = channel.getTransaction();
 		try {
@@ -29,24 +28,20 @@ public class KafkaSink extends AbstractSink implements Configurable{
 			Event e = channel.take();
 			if(e==null) {
 				tx.rollback();
-				log.trace("------------------roll back");
 				return Status.BACKOFF;
 			}
 			try {
-				log.trace("----------------------send");
 				producer.send(new ProducerData<String, String>(this.topic, new String(e.getBody())));
+				log.debug("Message: " + e.getBody());
 				tx.commit();
 				return Status.READY;
 			} catch(Exception ex) {
-				log.trace("------------------------------------send error", ex);
 				throw ex;
 			}
 		} catch(Exception e) {
 			tx.rollback();
-			log.debug("---------------------------------big error", e);
 			return Status.BACKOFF;
 		} finally {
-			log.trace("-----------------------close");
 			tx.close();
 		}
 	}
@@ -54,7 +49,6 @@ public class KafkaSink extends AbstractSink implements Configurable{
 	public void configure(Context context) {
 		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
 		this.producer = KafkaUtil.getProducer(context);
-		log.debug("-------Init producer done-----------");
 	}
 
 	@Override
