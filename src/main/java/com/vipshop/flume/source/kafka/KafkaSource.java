@@ -34,7 +34,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	ConsumerConnector consumer;
 	ConsumerIterator<Message> it;
 	String topic;
-	Integer batchSize;
+	Integer batchSize = 3;
 	
 	public static void main(String[] args) {
 
@@ -52,6 +52,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 			if(it.hasNext()) {
 				log.trace("-----------------has next");
 				message = it.next().message();
+				log.info("**************"+message);
 				event = new SimpleEvent();
 				buffer = message.payload();
 				headers = new HashMap<String, String>();
@@ -91,13 +92,11 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		Map<String, List<KafkaStream<Message>>> consumerMap = consumer.createMessageStreams(topicCountMap);
 	    KafkaStream<Message> stream =  consumerMap.get(topic).get(0);
 	    it = stream.iterator();
-	    log.debug("-------------init it done");
 	}
 
 	@Override
 	public synchronized void stop() {
 		consumer.shutdown();
-		log.debug("-----------------stop");
 		super.stop();
 	}
 
