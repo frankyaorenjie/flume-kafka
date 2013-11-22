@@ -15,11 +15,12 @@ import org.slf4j.LoggerFactory;
 
 import com.vipshop.flume.KafkaUtil;
 
+
 public class KafkaSink extends AbstractSink implements Configurable{
 	private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
 	private String topic;
 	private Producer<String, String> producer;
-	
+
 	public Status process() throws EventDeliveryException {
 		Channel channel = getChannel();
 		Transaction tx = channel.getTransaction();

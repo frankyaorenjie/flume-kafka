@@ -11,6 +11,7 @@ import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 import kafka.message.Message;
+import kafka.consumer.ConsumerTimeoutException;
 
 import org.apache.flume.Context;
 import org.apache.flume.Event;
@@ -25,20 +26,13 @@ import org.slf4j.LoggerFactory;
 
 import com.vipshop.flume.KafkaUtil;
 
-public class KafkaSource extends AbstractSource implements Configurable, PollableSource {
 
-	/**
-	 * @param args
-	 */
+public class KafkaSource extends AbstractSource implements Configurable, PollableSource {
 	private static final Logger log = LoggerFactory.getLogger(KafkaSource.class);
 	ConsumerConnector consumer;
 	ConsumerIterator<Message> it;
 	String topic;
 	Integer batchSize;
-	
-	public static void main(String[] args) {
-
-	}
 
 	public Status process() throws EventDeliveryException {
 		ArrayList<Event> eventList = new ArrayList<Event>();
@@ -47,29 +41,37 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		ByteBuffer buffer;
 		Map<String, String> headers;
 		byte [] bytes;
+		Status status = Status.READY;
 		try {
-		for(int i = 0; i < batchSize; i++){
-			if(it.hasNext()) {
-				message = it.next().message();
-				event = new SimpleEvent();
-				buffer = message.payload();
-				headers = new HashMap<String, String>();
-				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
-				bytes = new byte[buffer.remaining()];
-				buffer.get(bytes);
-				log.debug("Message[" + i + "]" + ": " + new String(bytes));
-				event.setBody(bytes);
-				event.setHeaders(headers);
-				eventList.add(event);
+			for(int i = 0; i < batchSize; i++){
+				if(it.hasNext()) {
+					message = it.next().message();
+					event = new SimpleEvent();
+					buffer = message.payload();
+					headers = new HashMap<String, String>();
+					headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
+					bytes = new byte[buffer.remaining()];
+					buffer.get(bytes);
+					log.debug("Message[" + i + "]" + ": " + new String(bytes));
+					event.setBody(bytes);
+					event.setHeaders(headers);
+					eventList.add(event);
+				}
 			}
-		}
-  		getChannelProcessor().processEventBatch(eventList);
-		return Status.READY;
+		} catch (ConsumerTimeoutException e) {
+			log.debug("KafkaSource Timeout" + e);
+			status = Status.BACKOFF;
 		} catch (Exception e) {
-			log.error("KafkaSource EXCEPTION" + e);
-			return Status.BACKOFF;
-		} finally {
+			log.error("KafkaSource Consumer EXCEPTION" + e);
+			status = Status.BACKOFF;
 		}
+		try {
+			getChannelProcessor().processEventBatch(eventList);
+		} catch (Exception e) {
+			log.error("KafkaSource Processor EXCEPTION" + e);
+			status = Status.BACKOFF;
+		}
+		return status;
 	}
 
 	public void configure(Context context) {
@@ -87,8 +89,8 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		topicCountMap.put(topic, new Integer(1));
 		Map<String, List<KafkaStream<Message>>> consumerMap = consumer.createMessageStreams(topicCountMap);
-	    KafkaStream<Message> stream =  consumerMap.get(topic).get(0);
-	    it = stream.iterator();
+		KafkaStream<Message> stream =  consumerMap.get(topic).get(0);
+		it = stream.iterator();
 	}
 
 	@Override

@@ -17,12 +17,11 @@ import org.slf4j.LoggerFactory;
 
 public class KafkaUtil {
 	private static final Logger log = LoggerFactory.getLogger(KafkaUtil.class);
-	/**
-	 * @param args
-	 */
+
 	public static String getKafkaConfigParameter(Context context, String key) {
 		return context.getString(key);
 	}
+
 	public static Properties getKafkaConfigProperties(Context context) {
 		Properties props = new Properties();
 		String contextString = context.toString();
@@ -37,12 +36,14 @@ public class KafkaUtil {
 		log.info("PROPS:" + props);
 		return props;
 	}
+
 	public static Producer<String, String> getProducer(Context context) {
 		log.info(context.toString());
 		Producer<String, String> producer;
 		producer = new Producer<String, String>(new ProducerConfig(getKafkaConfigProperties(context)));
 		return producer;
 	}
+
 	public static ConsumerConnector getConsumer(Context context) throws IOException, KeeperException, InterruptedException {
 		log.info(context.toString());
 		ConsumerConfig consumerConfig = new ConsumerConfig(getKafkaConfigProperties(context));
@@ -50,20 +51,3 @@ public class KafkaUtil {
 		return consumer;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
