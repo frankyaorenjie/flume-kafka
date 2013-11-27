@@ -46,17 +46,13 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	 * @param args
 	 */
 	private static final Logger log = LoggerFactory.getLogger(KafkaSource.class);
-	ConsumerConnector consumer;
-	ConsumerIterator<Message> it;
-	String topic;
-	Integer batchSize;
+	private ConsumerConnector consumer;
+	private ConsumerIterator<Message> it;
+	private String topic;
+	private Integer batchSize;
 	
-	public static void main(String[] args) {
-
-	}
-
 	public Status process() throws EventDeliveryException {
-		ArrayList<Event> eventList = new ArrayList<Event>();
+		List<Event> eventList = new ArrayList<Event>();
 		Message message;
 		Event event;
 		ByteBuffer buffer;
@@ -72,7 +68,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
 				bytes = new byte[buffer.remaining()];
 				buffer.get(bytes);
-				log.debug("Message[" + i + "]" + ": " + new String(bytes));
+				log.debug("Message[" + i + "]" + ": " + new String(bytes)); //new String(bytes, Charset.UTF-8)
 				event.setBody(bytes);
 				event.setHeaders(headers);
 				eventList.add(event);
@@ -81,7 +77,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
   		getChannelProcessor().processEventBatch(eventList);
 		return Status.READY;
 		} catch (Exception e) {
-			log.error("KafkaSource EXCEPTION" + e);
+			log.error("KafkaSource EXCEPTION, {}", e.getMessage());
 			return Status.BACKOFF;
 		} finally {
 		}
