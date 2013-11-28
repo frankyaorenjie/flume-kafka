@@ -1,7 +1,10 @@
 package com.vipshop.flume.sink.kafka;
 
+import java.util.Properties;
+
 import kafka.javaapi.producer.Producer;
-import kafka.javaapi.producer.ProducerData;
+import kafka.producer.KeyedMessage;
+import kafka.producer.ProducerConfig;
 
 import org.apache.flume.Channel;
 import org.apache.flume.Context;
@@ -15,26 +18,28 @@ import org.slf4j.LoggerFactory;
 
 import com.vipshop.flume.KafkaUtil;
 
-public class KafkaSink extends AbstractSink implements Configurable{
+public class KafkaSink extends AbstractSink implements Configurable {
 	private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
 	private String topic;
 	private Producer<String, String> producer;
-	
+
 	public Status process() throws EventDeliveryException {
 		Channel channel = getChannel();
 		Transaction tx = channel.getTransaction();
 		try {
 			tx.begin();
 			Event e = channel.take();
-			if(e==null) {
+			if (e == null) {
 				tx.rollback();
 				return Status.BACKOFF;
 			}
-			producer.send(new ProducerData<String, String>(this.topic, new String(e.getBody())));
+			String data = new String(e.getBody(), "utf-8");
+			this.producer.send(new KeyedMessage<String, String>(this.topic,
+					data));
 			log.trace("Message: " + e.getBody());
 			tx.commit();
 			return Status.READY;
-		} catch(Exception e) {
+		} catch (Exception e) {
 			tx.rollback();
 			return Status.BACKOFF;
 		} finally {
@@ -43,7 +48,7 @@ public class KafkaSink extends AbstractSink implements Configurable{
 	}
 
 	public void configure(Context context) {
-		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
+		this.topic = context.getString("topic");
 		this.producer = KafkaUtil.getProducer(context);
 	}
 
