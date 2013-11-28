@@ -59,7 +59,6 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		Map<String, String> headers;
 		byte [] bytes;
 		try {
-		for(int i = 0; i < batchSize; i++){
 			if(it.hasNext()) {
 				message = it.next().message();
 				event = new SimpleEvent();
@@ -68,14 +67,13 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
 				bytes = new byte[buffer.remaining()];
 				buffer.get(bytes);
-				log.debug("Message[" + i + "]" + ": " + new String(bytes)); //new String(bytes, Charset.UTF-8)
+				log.debug("Message:", new String(bytes)); //new String(bytes, Charset.UTF-8)
 				event.setBody(bytes);
 				event.setHeaders(headers);
 				eventList.add(event);
 			}
-		}
-  		getChannelProcessor().processEventBatch(eventList);
-		return Status.READY;
+			getChannelProcessor().processEventBatch(eventList);
+			return Status.READY;
 		} catch (Exception e) {
 			log.error("KafkaSource EXCEPTION, {}", e.getMessage());
 			return Status.BACKOFF;
@@ -85,7 +83,6 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 
 	public void configure(Context context) {
 		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
-		this.batchSize = Integer.parseInt(KafkaUtil.getKafkaConfigParameter(context, "batch.size"));
 		try {
 			this.consumer = KafkaUtil.getConsumer(context);
 		} catch (IOException e) {
