@@ -74,9 +74,8 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 			getChannelProcessor().processEventBatch(eventList);
 			return Status.READY;
 		} catch (Exception e) {
-			log.error("KafkaSource EXCEPTION, {}", e.getMessage());
+			log.error("KafkaSource EXCEPTION, {}", e);
 			return Status.BACKOFF;
-		} finally {
 		}
 	}
 
