@@ -49,7 +49,6 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	private ConsumerConnector consumer;
 	private ConsumerIterator<Message> it;
 	private String topic;
-	private Integer batchSize;
 	
 	public Status process() throws EventDeliveryException {
 		List<Event> eventList = new ArrayList<Event>();
@@ -82,7 +81,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	}
 
 	public void configure(Context context) {
-		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
+		this.topic = context.getString("topic");
 		try {
 			this.consumer = KafkaUtil.getConsumer(context);
 		} catch (IOException e) {

@@ -23,11 +23,13 @@ public class KafkaUtilTest {
 	@Test
 	public void testGetKafkaConfigParameter() {
 		Context context = new Context();
-		context.put("agent.sink.kafka1.consumer.timeout", "10");
-		context.put("agent.sink.kafka1.type", "KafkaSource");
+		context.put("consumer.timeout", "10");
+		context.put("type", "KafkaSource");
+		context.put("topic", "test");
 		Properties props = KafkaUtil.getKafkaConfigProperties(context);
-		assertEquals("10",props.getProperty("kafka1.consumer.timeout"));
-		assertNull(props.getProperty("kafka1.type"));
+		assertEquals("10",props.getProperty("consumer.timeout"));
+		assertEquals("test",props.getProperty("topic"));
+		assertNull(props.getProperty("type"));
 	}
 
 	@Test

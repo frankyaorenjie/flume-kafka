@@ -34,14 +34,15 @@ import org.slf4j.LoggerFactory;
 public class KafkaUtil {
 	private static final Logger log = LoggerFactory.getLogger(KafkaUtil.class);
 
-	public static String getKafkaConfigParameter(Context context, String key) {
-		return context.getString(key);
-	}
 	public static Properties getKafkaConfigProperties(Context context) {
+		log.info("context={}",context.toString());
 		Properties props = new Properties();
 		Map<String, String> contextMap = context.getParameters();
 		for(String key : contextMap.keySet()) {
-			props.setProperty(key, context.getString(key));
+			if (!key.equals("type") && !key.equals("channel")) {
+				props.setProperty(key, context.getString(key));
+				log.info("key={},value={}",key,context.getString(key));
+			}
 		}
 		return props;
 	}
