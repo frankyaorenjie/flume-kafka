@@ -1,113 +1,105 @@
 package com.vipshop.flume.source.kafka;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.awt.List;
 import java.lang.reflect.Field;
+import java.nio.ByteBuffer;
 
 import kafka.consumer.ConsumerIterator;
 import kafka.message.Message;
 import kafka.message.MessageAndMetadata;
 
-import org.apache.flume.Event;
 import org.apache.flume.EventDeliveryException;
 import org.apache.flume.PollableSource.Status;
 import org.apache.flume.channel.ChannelProcessor;
 import org.apache.flume.source.AbstractSource;
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.lib.legacy.ClassImposteriser;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaSourceTest {
+	private static final Logger log = LoggerFactory.getLogger(KafkaSourceTest.class);
 
-	private KafkaSource kafkaSource;
 
-	private ConsumerIterator<Message> mockit;
+	private KafkaSource mockKafkaSource;
+
+	private ConsumerIterator<Message> mockIt;
 
 	@SuppressWarnings("rawtypes")
 	private MessageAndMetadata mockMessageAndMetadata;
-	private Mockery context;
 	private ChannelProcessor mockChannelProcessor;
+	private ByteBuffer mockBuffer;
+	private Message mockMessage;
+	
+	
 	@SuppressWarnings("unchecked")
 	@Before
-	public void setUp() throws Exception {
-		context = new Mockery() {
-			{
-				setImposteriser(ClassImposteriser.INSTANCE);
-			}
-		};
-		Class.forName("kafka.consumer.ConsumerIterator");
-		Class.forName("org.I0Itec.zkclient.serialize.ZkSerializer");
-		mockit = context.mock(ConsumerIterator.class);
-		mockMessageAndMetadata = context.mock(MessageAndMetadata.class);
-		mockChannelProcessor = context.mock(ChannelProcessor.class);
-		kafkaSource = new KafkaSource();
-		Field field = KafkaSource.class.getDeclaredField("it");
-		field.setAccessible(true);
-		field.set(kafkaSource, mockit);
+	public void setup() throws Exception {
+		mockIt = mock(ConsumerIterator.class);
+		mockMessageAndMetadata = mock(MessageAndMetadata.class);
+		mockChannelProcessor = mock(ChannelProcessor.class);
+		mockBuffer = mock(ByteBuffer.class);
+		mockMessage = mock(Message.class);
+		mockKafkaSource = new KafkaSource();
 		
-		field = KafkaSource.class.getDeclaredField("batchSize");
-		field.setAccessible(true);
-		field.set(kafkaSource, 20);
+		when(mockMessage.payload()).thenReturn(mockBuffer);
+		when(mockMessageAndMetadata.message()).thenReturn(mockMessage);
 		
-		field = AbstractSource.class.getDeclaredField("channelProcessor");
+		Field field = AbstractSource.class.getDeclaredField("channelProcessor");
 		field.setAccessible(true);
-		field.set(kafkaSource, mockChannelProcessor);
+		field.set(mockKafkaSource, mockChannelProcessor);
+
+		field = KafkaSource.class.getDeclaredField("it");
+		field.setAccessible(true);
+		field.set(mockKafkaSource, mockIt);
 	}
 
 	@After
 	public void tearDown() throws Exception {
 	}
 
-	@Test
-	public void testStop() {
-	}
-
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testProcess() throws EventDeliveryException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		final Message message = new Message("frank".getBytes());
-		Field field = MessageAndMetadata.class.getDeclaredField("message");
-		field.setAccessible(true);
-		field.set(mockMessageAndMetadata, message);
-		context.checking(new Expectations() {
-			{
-				atMost(20).of(mockit).hasNext();
-				atMost(20).of(mockit).next();
-				will(returnValue(mockMessageAndMetadata));
-				oneOf(mockChannelProcessor).processEventBatch((java.util.List<Event>) with(any(List.class)));
-			}
-		});
-		Status status = kafkaSource.process();
+	public void testProcessItNotEmpty() throws EventDeliveryException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		when(mockIt.next()).thenReturn(mockMessageAndMetadata);
+		when(mockIt.hasNext()).thenReturn(true);
+		Status status = mockKafkaSource.process();
+		verify(mockIt, times(1)).hasNext();
+		verify(mockIt, times(1)).next();
+		verify(mockChannelProcessor, times(1)).processEventBatch(anyList());
+		when(mockIt.next()).thenReturn(mockMessageAndMetadata);
 		assertEquals(Status.READY, status);
-		context.assertIsSatisfied();
 	}
+
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testProcess_Exception() throws EventDeliveryException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-		final Message message = new Message("frank".getBytes());
-		Field field = MessageAndMetadata.class.getDeclaredField("message");
-		field.setAccessible(true);
-		field.set(mockMessageAndMetadata, message);
-		context.checking(new Expectations() {
-			{
-				atMost(20).of(mockit).hasNext();
-				atMost(20).of(mockit).next();
-				will(returnValue(mockMessageAndMetadata));
-				oneOf(mockChannelProcessor).processEventBatch((java.util.List<Event>) with(any(List.class)));
-				will(throwException(new Exception("processEventBatch Exception")));
-			}
-		});
-		Status status = kafkaSource.process();
-		assertEquals(Status.BACKOFF, status);
-		context.assertIsSatisfied();
+	public void testProcessItEmpty() throws EventDeliveryException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		when(mockIt.next()).thenReturn(mockMessageAndMetadata);
+		when(mockIt.hasNext()).thenReturn(false);
+		Status status = mockKafkaSource.process();
+		verify(mockIt, times(1)).hasNext();
+		verify(mockIt, times(0)).next();
+		verify(mockChannelProcessor, times(1)).processEventBatch(anyList());
+		when(mockIt.next()).thenReturn(mockMessageAndMetadata);
+		assertEquals(Status.READY, status);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
-	public void testConfigure() {
+	public void testProcessException() throws EventDeliveryException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+		when(mockIt.next()).thenThrow(new RuntimeException());
+		when(mockIt.hasNext()).thenReturn(true);
+		Status status = mockKafkaSource.process();
+		verify(mockIt, times(1)).hasNext();
+		verify(mockIt, times(1)).next();
+		verify(mockChannelProcessor, times(0)).processEventBatch(anyList());
+		assertEquals(Status.BACKOFF, status);
 	}
-
 }
