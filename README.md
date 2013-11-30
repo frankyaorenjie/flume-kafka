@@ -12,7 +12,7 @@ Configuration of Kafka Sink
 
     agent_log.sinks.kafka.type = com.vipshop.flume.sink.kafka.KafkaSink
     agent_log.sinks.kafka.channel = all_channel
-    agent_log.sinks.kafka.zkconnect = 127.0.0.1:2181
+    agent_log.sinks.kafka.zk.connect = 127.0.0.1:2181
     agent_log.sinks.kafka.topic = all
     agent_log.sinks.kafka.batchsize = 200
     agent_log.sinks.kafka.producer.type = async
