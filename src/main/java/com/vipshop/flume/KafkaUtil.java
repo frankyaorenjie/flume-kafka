@@ -16,6 +16,7 @@
 package com.vipshop.flume;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.Properties;
 
 import kafka.consumer.Consumer;
@@ -32,24 +33,16 @@ import org.slf4j.LoggerFactory;
 
 public class KafkaUtil {
 	private static final Logger log = LoggerFactory.getLogger(KafkaUtil.class);
-	/**
-	 * @param args
-	 */
+
 	public static String getKafkaConfigParameter(Context context, String key) {
 		return context.getString(key);
 	}
 	public static Properties getKafkaConfigProperties(Context context) {
 		Properties props = new Properties();
-		String contextString = context.toString();
-		for(final String kv : contextString.substring(14,contextString.length()-3).split(", ")) {
-			String k = kv.trim().split("=")[0];
-			String v = kv.trim().split("=")[1];
-			log.info("Parse Parames: " + k + "=" + v);
-			if (!k.equals("type") && !k.equals("channel")) {
-				props.put(k, v);
-			}
+		Map<String, String> contextMap = context.getParameters();
+		for(String key : contextMap.keySet()) {
+			props.setProperty(key, context.getString(key));
 		}
-		log.info("PROPS:" + props);
 		return props;
 	}
 	public static Producer<String, String> getProducer(Context context) {
@@ -65,6 +58,7 @@ public class KafkaUtil {
 		return consumer;
 	}
 }
+
 
 
 

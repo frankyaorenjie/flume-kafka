@@ -27,9 +27,11 @@ public class KafkaSourceTest {
 
 	private ConsumerIterator<Message> mockit;
 
+	@SuppressWarnings("rawtypes")
 	private MessageAndMetadata mockMessageAndMetadata;
 	private Mockery context;
 	private ChannelProcessor mockChannelProcessor;
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws Exception {
 		context = new Mockery() {
@@ -64,6 +66,7 @@ public class KafkaSourceTest {
 	public void testStop() {
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testProcess() throws EventDeliveryException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		final Message message = new Message("frank".getBytes());
@@ -82,6 +85,7 @@ public class KafkaSourceTest {
 		assertEquals(Status.READY, status);
 		context.assertIsSatisfied();
 	}
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testProcess_Exception() throws EventDeliveryException, SecurityException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
 		final Message message = new Message("frank".getBytes());

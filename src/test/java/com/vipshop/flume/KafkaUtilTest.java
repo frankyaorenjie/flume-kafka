@@ -2,7 +2,8 @@ package com.vipshop.flume;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+
+import java.util.Properties;
 
 import org.apache.flume.Context;
 import org.junit.After;
@@ -22,9 +23,11 @@ public class KafkaUtilTest {
 	@Test
 	public void testGetKafkaConfigParameter() {
 		Context context = new Context();
-		context.put("k", "v");
-		assertEquals("v",KafkaUtil.getKafkaConfigParameter(context, "k"));
-		assertNull(KafkaUtil.getKafkaConfigParameter(context, null));
+		context.put("agent.sink.kafka1.consumer.timeout", "10");
+		context.put("agent.sink.kafka1.type", "KafkaSource");
+		Properties props = KafkaUtil.getKafkaConfigProperties(context);
+		assertEquals("10",props.getProperty("kafka1.consumer.timeout"));
+		assertNull(props.getProperty("kafka1.type"));
 	}
 
 	@Test
