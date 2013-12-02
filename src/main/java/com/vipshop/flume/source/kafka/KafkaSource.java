@@ -67,7 +67,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
 				bytes = new byte[buffer.remaining()];
 				buffer.get(bytes);
-				log.debug("Message:", new String(bytes, Charsets.UTF_8)); //new String(bytes, Charset.UTF-8)
+				log.debug("Message: {}", new String(bytes));
 				event.setBody(bytes);
 				event.setHeaders(headers);
 				eventList.add(event);
