@@ -26,7 +26,6 @@ import kafka.javaapi.producer.Producer;
 import kafka.producer.ProducerConfig;
 
 import org.apache.flume.Context;
-import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +51,7 @@ public class KafkaUtil {
 		producer = new Producer<String, String>(new ProducerConfig(getKafkaConfigProperties(context)));
 		return producer;
 	}
-	public static ConsumerConnector getConsumer(Context context) throws IOException, KeeperException, InterruptedException {
+	public static ConsumerConnector getConsumer(Context context) throws IOException, InterruptedException {
 		log.info(context.toString());
 		ConsumerConfig consumerConfig = new ConsumerConfig(getKafkaConfigProperties(context));
 		ConsumerConnector consumer = Consumer.createJavaConsumerConnector(consumerConfig);
