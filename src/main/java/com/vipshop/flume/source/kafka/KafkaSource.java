@@ -34,7 +34,6 @@ import org.apache.flume.PollableSource;
 import org.apache.flume.conf.Configurable;
 import org.apache.flume.event.SimpleEvent;
 import org.apache.flume.source.AbstractSource;
-import org.apache.zookeeper.KeeperException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,8 +84,6 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		try {
 			this.consumer = KafkaUtil.getConsumer(context);
 		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (KeeperException e) {
 			e.printStackTrace();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
