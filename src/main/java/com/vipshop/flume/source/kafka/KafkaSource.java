@@ -37,7 +37,6 @@ import org.apache.flume.source.AbstractSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Charsets;
 import com.vipshop.flume.KafkaUtil;
 
 public class KafkaSource extends AbstractSource implements Configurable, PollableSource {
