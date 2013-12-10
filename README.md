@@ -1,3 +1,5 @@
+Since this plugin for flume is going to merge into flume, I've splited this plugin to two dependent plugin [flumg-ng-kafka-source](https://github.com/baniuyao/flume-ng-kafka-source) and [flume-ng-kafka-sink](https://github.com/baniuyao/flume-ng-kafka-sink). ASFv2 branch is okay, but I advised to use new plugin.
+===========
 Flume-ng Kafka
 ===========
 
