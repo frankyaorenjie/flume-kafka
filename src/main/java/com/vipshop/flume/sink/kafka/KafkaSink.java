@@ -1,5 +1,7 @@
 package com.vipshop.flume.sink.kafka;
 
+import java.util.List;
+
 import kafka.javaapi.producer.Producer;
 import kafka.javaapi.producer.ProducerData;
 
@@ -13,27 +15,45 @@ import org.apache.flume.sink.AbstractSink;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Lists;
 import com.vipshop.flume.KafkaUtil;
 
 public class KafkaSink extends AbstractSink implements Configurable{
 	private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
 	private String topic;
-	private Producer<String, String> producer;
+	private Producer<String, byte[]> producer;
+	
+	private final int batchSize = 100;
 	
 	public Status process() throws EventDeliveryException {
 		Channel channel = getChannel();
 		Transaction tx = channel.getTransaction();
+		tx.begin();
+		
 		try {
-			tx.begin();
-			Event e = channel.take();
-			if(e==null) {
+			List<ProducerData<String, byte[]>> msgList = Lists.newArrayList();
+			while(msgList.size() <= batchSize) {	
+				Event e = channel.take();
+				if(e==null) {
+					break;
+				}
+				ProducerData<String, byte[]> msg = new ProducerData<String, byte[]>(
+						this.topic,
+						e.getBody());
+				log.trace("Message: " + e.getBody());
+				msgList.add(msg);
+			}
+			
+			if (msgList.isEmpty()) {
+				log.debug(String.format("msg-list empty"));
 				tx.rollback();
 				return Status.BACKOFF;
+			} else {
+				this.producer.send(msgList);
+				log.debug(String.format("sending to kafka with batch-size %d", msgList.size()));
+				tx.commit();
+				return Status.READY;
 			}
-			producer.send(new ProducerData<String, String>(this.topic, new String(e.getBody())));
-			log.trace("Message: " + e.getBody());
-			tx.commit();
-			return Status.READY;
 		} catch(Exception e) {
 			tx.rollback();
 			return Status.BACKOFF;

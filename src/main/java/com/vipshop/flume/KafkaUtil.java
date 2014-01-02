@@ -37,10 +37,10 @@ public class KafkaUtil {
 		log.info("PROPS:" + props);
 		return props;
 	}
-	public static Producer<String, String> getProducer(Context context) {
+	public static Producer<String, byte[]> getProducer(Context context) {
 		log.info(context.toString());
-		Producer<String, String> producer;
-		producer = new Producer<String, String>(new ProducerConfig(getKafkaConfigProperties(context)));
+		Producer<String, byte[]> producer;
+		producer = new Producer<String, byte[]>(new ProducerConfig(getKafkaConfigProperties(context)));
 		return producer;
 	}
 	public static ConsumerConnector getConsumer(Context context) throws IOException, KeeperException, InterruptedException {
