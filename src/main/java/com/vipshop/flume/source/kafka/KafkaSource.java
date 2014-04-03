@@ -32,7 +32,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 	 */
 	private static final Logger log = LoggerFactory.getLogger(KafkaSource.class);
 	ConsumerConnector consumer;
-	ConsumerIterator<Message> it;
+	ConsumerIterator<byte[], byte[]> it;
 	String topic;
 	Integer batchSize;
 	
@@ -42,7 +42,7 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 
 	public Status process() throws EventDeliveryException {
 		ArrayList<Event> eventList = new ArrayList<Event>();
-		Message message;
+		byte[] message;
 		Event event;
 		ByteBuffer buffer;
 		Map<String, String> headers;
@@ -51,7 +51,8 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 			if(it.hasNext()) {
 				message = it.next().message();
 				event = new SimpleEvent();
-				buffer = message.payload();
+				//buffer = message.payload();
+                buffer = ByteBuffer.wrap(message);
 				headers = new HashMap<String, String>();
 				headers.put("timestamp", String.valueOf(System.currentTimeMillis()));
 				bytes = new byte[buffer.remaining()];
@@ -83,8 +84,8 @@ public class KafkaSource extends AbstractSource implements Configurable, Pollabl
 		}
 		Map<String, Integer> topicCountMap = new HashMap<String, Integer>();
 		topicCountMap.put(topic, new Integer(1));
-		Map<String, List<KafkaStream<Message>>> consumerMap = consumer.createMessageStreams(topicCountMap);
-	    KafkaStream<Message> stream =  consumerMap.get(topic).get(0);
+		Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = consumer.createMessageStreams(topicCountMap);
+	    KafkaStream<byte[], byte[]> stream =  consumerMap.get(topic).get(0);
 	    it = stream.iterator();
 	}
 

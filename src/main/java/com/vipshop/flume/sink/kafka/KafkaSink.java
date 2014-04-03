@@ -1,7 +1,7 @@
 package com.vipshop.flume.sink.kafka;
 
 import kafka.javaapi.producer.Producer;
-import kafka.javaapi.producer.ProducerData;
+import kafka.producer.KeyedMessage;
 
 import org.apache.flume.Channel;
 import org.apache.flume.Context;
@@ -15,46 +15,47 @@ import org.slf4j.LoggerFactory;
 
 import com.vipshop.flume.KafkaUtil;
 
-public class KafkaSink extends AbstractSink implements Configurable{
-	private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
-	private String topic;
-	private Producer<String, String> producer;
-	
-	public Status process() throws EventDeliveryException {
-		Channel channel = getChannel();
-		Transaction tx = channel.getTransaction();
-		try {
-			tx.begin();
-			Event e = channel.take();
-			if(e==null) {
-				tx.rollback();
-				return Status.BACKOFF;
-			}
-			producer.send(new ProducerData<String, String>(this.topic, new String(e.getBody())));
-			log.trace("Message: " + e.getBody());
-			tx.commit();
-			return Status.READY;
-		} catch(Exception e) {
-			tx.rollback();
-			return Status.BACKOFF;
-		} finally {
-			tx.close();
-		}
-	}
+public class KafkaSink extends AbstractSink implements Configurable {
+    private static final Logger log = LoggerFactory.getLogger(KafkaSink.class);
+    private String topic;
+    private Producer<String, String> producer;
 
-	public void configure(Context context) {
-		this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
-		this.producer = KafkaUtil.getProducer(context);
-	}
+    public Status process() throws EventDeliveryException {
+        Channel channel = getChannel();
+        Transaction tx = channel.getTransaction();
+        try {
+            tx.begin();
+            Event e = channel.take();
+            if (e == null) {
+                tx.rollback();
+                return Status.BACKOFF;
+            }
+            producer.send(new KeyedMessage<String, String>(this.topic, new String(e.getBody())));
+            log.trace("Message: " + e.getBody());
+            tx.commit();
+            return Status.READY;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            tx.rollback();
+            return Status.BACKOFF;
+        } finally {
+            tx.close();
+        }
+    }
 
-	@Override
-	public synchronized void start() {
-		super.start();
-	}
+    public void configure(Context context) {
+        this.topic = KafkaUtil.getKafkaConfigParameter(context, "topic");
+        this.producer = KafkaUtil.getProducer(context);
+    }
 
-	@Override
-	public synchronized void stop() {
-		producer.close();
-		super.stop();
-	}
+    @Override
+    public synchronized void start() {
+        super.start();
+    }
+
+    @Override
+    public synchronized void stop() {
+        producer.close();
+        super.stop();
+    }
 }
